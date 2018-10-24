@@ -27,6 +27,7 @@ Graph::Graph(const std::shared_ptr<Device> &device,
     : graph_buf_(graph_buf), network_dimension_(network_dimension),
       handle_(nullptr) {
     allocate(device->getHandle());
+    setId(getGraphId());
 }
 
 Graph::~Graph() {
@@ -48,6 +49,23 @@ std::string Graph::getDebugInfo() {
     return result;
 }
 
+int Graph::getGraphId() {
+    assert(handle_ != nullptr);
+    int id;
+    unsigned int length;
+    int ret = hsGetGraphOption(handle_, HS_GRAPH_ID, reinterpret_cast<void **>(&id), &length);
+    ExceptionUtil::tryToThrowHsException(ret);
+    return id;
+
+}
+
+void Graph::setId(int id) {
+    graphId = id;
+}
+
+int Graph::getId() {
+    return graphId;
+}
 float Graph::getTimeTaken() {
     assert(handle_ != nullptr);
     float *time_taken;
@@ -87,7 +105,7 @@ cv::Mat Graph::getGraphImage(void *user_param, float std, float mean,
     unsigned int length;
     cv::Mat mat;
 
-    int ret = hsGetImage(getHandle(), reinterpret_cast<void **>(&image_data),
+    int ret = hsGetImage(getHandle(), reinterpret_cast<void **>(&image_data),graphId,
                          user_param, std, mean, truthy);
     ExceptionUtil::tryToThrowHsException(ret);
     if (truthy) {

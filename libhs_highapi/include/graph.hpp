@@ -35,7 +35,10 @@ public:
     float getTimeTaken();
     std::string getDebugInfo();
     void *getHandle();
+    int getGraphId();
 
+    int getId();
+    void setId(int id);
     int getNetworkDim() const { return network_dimension_; }
 
     cv::Mat getGraphImage(void *user_param, float std, float mean, bool truthy);
@@ -44,6 +47,7 @@ private:
     std::string graph_buf_;
     const int network_dimension_;
     void *handle_;
+    int graphId;
 };
 
 } // namespace hs

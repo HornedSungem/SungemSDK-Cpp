@@ -149,9 +149,8 @@ void HS::detect() {
 void HS::loadTensor(const cv::Mat &image) {
     tensor_->clearTensor();
     tensor_->loadImageData(image);
-
     assert(graph_->getHandle() != nullptr);
-    int ret = hsLoadTensor(graph_->getHandle(), tensor_->raw(), tensor_->size(),
+    int ret = hsLoadTensor(graph_->getHandle(), tensor_->raw(),graph_->getId(), tensor_->size(),
                            user_param_);
     ExceptionUtil::tryToThrowHsException(ret);
 }

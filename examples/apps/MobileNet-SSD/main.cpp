@@ -10,7 +10,16 @@
 #include <opencv2/opencv.hpp>
 #include "hsapi.hpp"
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[])
+{
+    bool isTheDevHS = true;
+    cv::VideoCapture capture;
+
+    if (!isTheDevHS)
+    {
+        capture.open(1);
+    }
+
     std::string graph;
     std::string category;
 
@@ -19,24 +28,36 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please input the filepath of categories: ";
     std::cin >> category;
 
-    std::vector<float> mean = std::vector<float> {127.5, 127.5, 127.5};
-    
-    hs::HS hs = hs::HS(0, hs::Device::LogLevel::Verbose,
-                            "mobilenetssd", graph,
-                            category, 300,
-                            mean, 0.007843, 0);
+    std::vector<float> mean = std::vector<float>{127.5, 127.5, 127.5};
 
-    do {
-        cv::Mat cvImage = hs.getImage(true);
+    hs::HS hs = hs::HS(0, hs::Device::LogLevel::Verbose,
+                       "mobilenetssd", graph,
+                       category, 300,
+                       mean, 0.007843, 0);
+    cv::Mat cvImage;
+    do
+    {
+
+        if (isTheDevHS)
+        {
+            cvImage = hs.getImage(true);
+        }
+        else
+        {
+            capture >> cvImage;
+            hs.loadTensor(cvImage);
+        }
+        
         int width = cvImage.cols;
         int height = cvImage.rows;
-        
+
         hs.detect();
         hs::DetectionResultPtr result = hs.getDetectionResult();
 
-        for (auto obj : result->items_in_boxes) {
+        for (auto obj : result->items_in_boxes)
+        {
             std::stringstream ss;
-            
+
             ss << obj.item.category << ": " << obj.item.probability * 100 << '%';
             int xmin = obj.bbox.x;
             int ymin = obj.bbox.y;
@@ -46,10 +67,11 @@ int main(int argc, const char * argv[]) {
             int xmax = ((xmin + w) < width) ? (xmin + w) : width;
             int ymax = ((ymin + h) < height) ? (ymin + h) : height;
 
-            if (xmax > width * 0.8 && ymax > height * 0.8) {
+            if (xmax > width * 0.8 && ymax > height * 0.8)
+            {
                 continue;
             }
-            
+
             cv::Point left_top = cv::Point(xmin, ymin);
             cv::Point right_bottom = cv::Point(xmax, ymax);
             cv::rectangle(cvImage, left_top, right_bottom, cv::Scalar(0, 255, 0), 1);

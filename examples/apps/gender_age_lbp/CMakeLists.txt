@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(MobileNet-SSD)
+project(gender_age_lbp)
 
 # ----------------------------------------
 
 set(LIBHS ../../../SungemSDK)
-set(LIBHS_HIGHAPI ../../../libhs_highapi)
 
 if(APPLE)
     set(LIBHS_LIB ${LIBHS}/lib/macos)
@@ -15,19 +14,19 @@ else()
 endif()
 
 # ----------------------------------------
-find_package(OpenCV)
-include_directories(${OpenCV_DIR})
 
-include_directories(${LIBHS_HIGHAPI}/include)
-
+include_directories(include)
+include_directories(cpp)
+include_directories(${LIBHS}/include)
 link_directories(${LIBHS_LIB})
-link_directories(${LIBHS_HIGHAPI}/lib)
+
 
 # ----------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # ----------------------------------------
-
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} -lhs -lhs_highapi ${OpenCV_LIBS})
+find_package(OpenCV)
+add_executable(${PROJECT_NAME} cpp/gender_age_lbp.cpp cpp/fp16.c)
+#target_link_libraries(${PROJECT_NAME} -lhs -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_objdetect)
+target_link_libraries(${PROJECT_NAME} -lhs ${OpenCV_LIBS})

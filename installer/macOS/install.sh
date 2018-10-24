@@ -8,7 +8,7 @@ script_path=$(cd `dirname $0`; pwd)
 
 #----------------------------------------
 
-bash $script_path/../../SungemSDK/installer/install.sh >/dev/null
+bash $script_path/../../SungemSDK/installer/macOS/install.sh >/dev/null
 
 #----------------------------------------
 

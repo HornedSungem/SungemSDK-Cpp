@@ -23,8 +23,6 @@ std::map<int, std::string> CODE2STR = {
     {HS_INVALID_PARAMETERS, "at least one of the given parameters is invalid "
                             "in the context of the function call"},
     {HS_TIMEOUT, "timeout in the communication with the device"},
-    {HS_MVCMD_NOT_FOUND,
-     "the file named MvNCAPI.mvcmd should be installed in the hs direcotry"},
     {HS_NO_DATA, "no data to return"},
     {HS_GONE, "the graph or device has been closed during the operation"},
     {HS_UNSUPPORTED_GRAPH_FILE,
@@ -60,10 +58,6 @@ void ExceptionUtil::tryToThrowHsException(int code) {
 
         if (code == HS_TIMEOUT) {
             throw HsTimeout(msg);
-        }
-
-        if (code == HS_MVCMD_NOT_FOUND) {
-            throw HsMvCmdNotFound(msg);
         }
 
         if (code == HS_NO_DATA) {

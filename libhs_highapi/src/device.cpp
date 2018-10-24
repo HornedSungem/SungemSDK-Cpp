@@ -60,11 +60,11 @@ void Device::monitorThermal() const {
     ThermalThrottlingLevel level = getThermalThrottlingLevel();
 
     if (level == High) {
-        throw HsHighThermal();
+    //    throw HsHighThermal();
     }
 
     if (level == Aggressive) {
-        throw HsAggressiveThermal();
+    //    throw HsAggressiveThermal();
     }
 }
 
@@ -114,7 +114,7 @@ cv::Mat Device::getDeviceImage(bool truthy) {
     int ret = hsDeviceGetImage(
         getHandle(), reinterpret_cast<void **>(&device_image_data), truthy);
     ExceptionUtil::tryToThrowHsException(ret);
-    
+
     if (truthy) {
         std::vector<uint8_t> result_vector(
             reinterpret_cast<uint8_t *>(device_image_data),
